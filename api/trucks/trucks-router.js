@@ -6,9 +6,9 @@ const Trucks = require('./trucks-model');
 const Menus = require('../menus/menus-model');
 const MenuItems = require('../MenuItems/menuItems-model');
 const { validTruck } = require('./trucks-service');
-const TruckRatings = require('../truckRatings/truckRatings-model');
-const MenuItemRatings = require('../menuItemRatings/menuItemRatings-model');
-const ItemPhotos = require('../itemPhotos/itemPhotos-model');
+const TruckRatings = require('../TruckRatings/truckRatings-model');
+const MenuItemRatings = require('../MenuItemRatings/menuItemRatings-model');
+const ItemPhotos = require('../ItemPhotos/itemPhotos-model');
 
 /* ----- GET /api/trucks ----- */
 router.get('/', restricted, (req, res) => {
