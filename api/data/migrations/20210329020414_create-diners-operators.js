@@ -7,7 +7,8 @@ exports.up = function (knex) {
 				.unique()
 				.unsigned()
 				.notNullable()
-				.references('users_id')
+				.references('userId')
+				.inTable('users')
 				.onDelete('CASCADE')
 				.onUpdate('CASCADE');
 			tbl
@@ -22,7 +23,8 @@ exports.up = function (knex) {
 				.unique()
 				.unsigned()
 				.notNullable()
-				.references()
+				.references('userId')
+				.inTable('users')
 				.onDelete('CASCADE')
 				.onUpdate('CASCADE');
 		});
