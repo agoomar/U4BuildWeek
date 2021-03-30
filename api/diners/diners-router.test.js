@@ -69,7 +69,7 @@ describe('diners-router', () => {
 	describe('GET /api/diners/:id/favoriteTrucks', () => {
 		beforeAll(async () => {
 			res = await request(server)
-				.get(`/api/diners/100001/favoriteTrucks`)
+				.get(`/api/diners/101/favoriteTrucks`)
 				.set('Authorization', `Bearer ${token}`);
 		});
 
@@ -85,7 +85,7 @@ describe('diners-router', () => {
 	describe('POST /api/diners/:id/favoriteTrucks', () => {
 		beforeAll(async () => {
 			res = await request(server)
-				.post(`/api/diners/100002/favoriteTrucks`)
+				.post(`/api/diners/102/favoriteTrucks`)
 				.set('Authorization', `Bearer ${token}`)
 				.send({ truckId: 100002 });
 		});
@@ -102,16 +102,16 @@ describe('diners-router', () => {
 	describe('DELETE /api/diners/:id/favoriteTrucks', () => {
 		beforeAll(async () => {
 			res = await request(server)
-				.delete('/api/diners/100002/favoriteTrucks')
+				.delete('/api/diners/102/favoriteTrucks')
 				.set('Authorization', `Bearer ${token}`)
-				.send({ truckId: 100002 });
+				.send({ truckId: 102 });
 		});
 
 		it('should return a JSON object', () => {
 			expect(res.type).toBe('application/json');
 		});
 
-		it('should remove truck 1000002 from favoriteTrucks', () => {
+		it('should remove truck 102 from favoriteTrucks', () => {
 			expect(res.body.length).toEqual(1);
 		});
 	});

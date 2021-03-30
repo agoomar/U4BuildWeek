@@ -59,7 +59,7 @@ describe('trucks-router', () => {
 					imageOfTruck: 'truck.jpg',
 					cuisineType: 'sushi',
 					currentLocation: 'Athens, GA',
-					operatorId: 100001,
+					operatorId: 101,
 				});
 		});
 
@@ -82,7 +82,7 @@ describe('trucks-router', () => {
 					imageOfTruck: 'truck.jpg',
 					cuisineType: 'sushi',
 					currentLocation: 'Athens, GA',
-					operatorId: 100001,
+					operatorId: 101,
 				});
 		});
 
