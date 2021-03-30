@@ -36,7 +36,7 @@ describe('trucks-router', () => {
 	describe('GET /api/trucks/:id', () => {
 		beforeAll(async () => {
 			res = await request(server)
-				.get('/api/trucks/100001')
+				.get('/api/trucks/101')
 				.set('Authorization', `Bearer ${token}`);
 		});
 
@@ -75,7 +75,7 @@ describe('trucks-router', () => {
 	describe('PUT /api/trucks/:id', () => {
 		beforeAll(async () => {
 			res = await request(server)
-				.put('/api/trucks/100003')
+				.put('/api/trucks/103')
 				.set('Authorization', `Bearer ${token}`)
 				.send({
 					name: 'new truck name',
@@ -98,7 +98,7 @@ describe('trucks-router', () => {
 	describe('DELETE /api/trucks/:id', () => {
 		beforeAll(async () => {
 			res = await request(server)
-				.delete('/api/trucks/100003')
+				.delete('/api/trucks/103')
 				.set('Authorization', `Bearer ${token}`);
 		});
 
