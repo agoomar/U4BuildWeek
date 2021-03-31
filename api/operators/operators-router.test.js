@@ -52,7 +52,7 @@ describe('operators-router', () => {
 	describe('GET /api/operators/:id/trucksOwned', () => {
 		beforeAll(async () => {
 			res = await request(server)
-				.get('/api/operators/100001/trucksOwned')
+				.get('/api/operators/101/trucksOwned')
 				.set('Authorization', `Bearer ${token}`);
 		});
 
