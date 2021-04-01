@@ -1,60 +1,128 @@
-# Build Week Scaffolding for Node and PostgreSQL
+# Food Truck TrackR Backend
 
-## Video Tutorial
+## Diner Schema
 
-The following tutorial explains how to set up this project using PostgreSQL and Heroku.
+{
+dinerId: integer,
+username: string,
+password: string,
+email: string,
+currentLocation: string '<latitude>,<longitude>',
+favoriteTrucks: array of truck objects
+}
 
-[![Setting up PostgreSQL for Build Week](https://img.youtube.com/vi/kTO_tf4L23I/maxresdefault.jpg)](https://www.youtube.com/watch?v=kTO_tf4L23I)
+## Operator Schema
 
-## Requirements
+{
+operatorId: integer,
+username: string,
+password: string,
+email: string,
+trucksOwned: array of truck objects
+}
 
-- [PostgreSQL, pgAdmin 4](https://www.postgresql.org/download/) and [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) installed in your local machine.
-- A Heroku app with the [Heroku PostgreSQL Addon](https://devcenter.heroku.com/articles/heroku-postgresql#provisioning-heroku-postgres) added to it.
-- Development and testing databases created with [pgAdmin 4](https://www.pgadmin.org/docs/pgadmin4/4.29/database_dialog.html).
+## Truck Schema
 
-## Starting a New Project
+{
+id: integer,
+name: string,
+imageOfTruck: string,
+cuisineType: string,
+currentLocation: string,
+departureTime: date and time (in ms since 1/1/70),
+operatorId: integer,
+menu: array of menuItem objects,
+customerRatings: array of customerRating values (integers),
+customerRatingsAvg: integer
+}
 
-- Create a new repository using this template, and clone it to your local.
-- Create a `.env` file and follow the instructions inside `knexfile.js`.
-- Fix the scripts inside `package.json` to use your Heroku app.
+## Menu Item Schema
 
-## Scripts
+{
+id: integer,
+menuId: integer,
+itemName: string,
+itemDescription: string,
+itemPrice: integer
+itemPhotos: array of URLs (strings),
+customerRatings: array of customerRating values (integers),
+customerRatingsAvg: integer
+}
 
-- **start**: Runs the app.
-- **server**: Runs the app with Nodemon.
-- **migrate**: Migrates the local development database to the latest.
-- **rollback**: Rolls back migrations in the local development database.
-- **seed**: Truncates all tables in the local development database, feel free to add more seed files.
-- **test**: Runs tests.
-- **deploy**: Deploys the main branch to Heroku.
+## API
 
-**The following scripts NEED TO BE EDITED before using: replace `YOUR_HEROKU_APP_NAME_HERE`**
+POST /api/auth/register/diner - This creates a new diner
 
-- **migrateh**: Migrates the Heroku database to the latest.
-- **rollbackh**: Rolls back migrations in the Heroku database.
-- **databaseh**: Interact with the Heroku database from the command line using psql.
-- **seedh**: Runs all seeds in the Heroku database.
+req.body: username, password, and email are required, currentLocation is optional
+returns the new diner that was created
 
-## Hot Tips
+POST /api/auth/register/operator - This creates a new operator
 
-- Figure out the connection to the database and deployment before writing any code.
+req.body: username, password, and email are required
+returns the new operator that was created
 
-- If you need to make changes to a migration file that has already been released to Heroku, follow this sequence:
+POST /api/auth/login - This authenticates a diner or operator
 
-  1. Roll back migrations in the Heroku database
-  2. Deploy the latest code to Heroku
-  3. Migrate the Heroku database to the latest
+req.body: username and password are required
+returns a JSON web token, user type (either diner or operator), and the user's diner or operator object - include { 'authorization': 'Bearer <token>' } in request headers to access restricted endpoints
 
-- If your frontend devs are clear on the shape of the data they need, you can quickly build provisional endpoints that return mock data. They shouldn't have to wait for you to build the entire backend.
+GET /api/trucks - restricted, returns an array of all trucks
 
-- Keep your endpoints super lean: the bulk of the code belongs inside models and other middlewares.
+GET /api/trucks/:id - restricted, returns the truck with the given id
 
-- Validating and sanitizing client data using a library is much less work than doing it manually.
+POST /api/trucks - restricted, creates a new truck
 
-- Revealing crash messages to clients is a security risk, but during development it's helpful if your frontend devs are able to tell you what crashed.
+req.body: name, imageOfTruck, cuisineType, currentLocation, and operatorId are required, departureTime defaults to current time if not provided
+returns the new truck that was created
 
-- PostgreSQL comes with [fantastic built-in functions](https://hashrocket.com/blog/posts/faster-json-generation-with-postgresql) for hammering rows into whatever JSON shape.
+PUT /api/trucks/:id - restricted, updates the truck with the given id
 
-- If you want to edit a migration that has already been released but don't want to lose all the data, make a new migration instead. This is a more realistic flow for production apps: prod databases are never migrated down. We can migrate Heroku down freely only because there's no valuable data from customers in it. In this sense, Heroku is acting more like a staging environment than production.
+DELETE /api/trucks/:id - restricted, deletes the truck with the given id
 
-- If your fronted devs are interested in running the API locally, help them set up PostgreSQL & pgAdmin in their machines, and teach them how to run migrations in their local. This empowers them to (1) help you troubleshoot bugs, (2) obtain the latest code by simply doing `git pull` and (3) work with their own data, without it being wiped every time you roll back the Heroku db. Collaboration is more fun and direct, and you don't need to deploy as often.
+GET /api/trucks/:id/menu - restricted, returns an array of the menuItems from the menu for the truck with the given id
+
+POST /api/trucks/:id/menu - restricted, adds a menuItem to the menu for the truck with the given id
+
+req.body: itemName, itemDescription, and itemPrice are required
+returns the menuItem added to the menu
+
+PUT /api/trucks/:truckId/menu/:menuItemId - restricted, updates the menuItem with the given menuItemId
+
+returns the updated menuItem
+DELETE /api/trucks/:truckId/menu/:menuItemId - restricted, removes the menuItem with the given menuItemId
+
+POST /api/trucks/:truckId/customerRatings/:dinerId - restricted, adds (or replaces) a customerRating for the truck with the given truckId associated with the diner with the given dinerId
+
+req.body: customerRating is required
+returns the array of customerRatings for the truck with the given truckId
+POST /api/trucks/:truckId/menu/:menuItemId/customerRatings/:dinerId - restricted, adds (or replaces) a customerRating for the menuItem with the given menuItemId associated with the diner with the given dinerId
+
+req.body: customerRating is required
+returns the array of customerRatings for the menuItem with the given menuItemId
+POST /api/trucks/:truckId/menu/:menuItemId/itemPhotos - restricted, adds a url (string) to the itemPhotos array for the menuItem with the given id
+
+req.body: a url (string) is required
+returns the updated array of itemPhotos
+DELETE /api/trucks/:truckId/menu/:menuItemId/itemPhotos - restricted, removes a url (string) from the itemPhotos array for the menuItem with the given id
+
+req.body: a url (string) is required
+returns the updated array of the itemPhotos
+GET /api/diners/:id - restricted, returns the diner with the given id
+
+PUT /api/diners/:id - restricted, updates the currentLocation of the diner with the given id
+
+req.body: a currentLocation (string with the format ',') is required
+returns the updated diner
+GET /api/diners/:id/favoriteTrucks - restricted, returns an array of favoriteTrucks of the diner with the given id
+
+POST /api/diners/:id/favoriteTrucks - restricted, adds a truck to the array of favoriteTrucks of the diner with the given id
+
+req.body: truckId is required
+returns the updated array of favoriteTrucks of the diner with the given id
+DELETE /api/diners/:id/favoriteTrucks - restricted, deletes a truck from the array of favoriteTrucks of the diner with the given id
+
+req.body: truckId is required
+returns the updated array of the diner's favoriteTrucks
+GET /api/operators/:id - restricted, returns the operator with the given id
+
+GET /api/operators/:id/trucksOwned - restricted, returns an array of trucks owned by the operator with the given id
