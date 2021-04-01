@@ -3,50 +3,83 @@
 ## Diner Schema
 
 {
-dinerId: integer,
-username: string,
-password: string,
-email: string,
-currentLocation: string '<latitude>,<longitude>',
-favoriteTrucks: array of truck objects
+
+  dinerId: integer,
+
+  username: string,
+
+  password: string,
+
+  email: string,
+
+  currentLocation: string '<latitude>,<longitude>',
+  
+  favoriteTrucks: array of truck objects
+
 }
 
 ## Operator Schema
 
 {
+
 operatorId: integer,
+
 username: string,
+
 password: string,
+
 email: string,
+
 trucksOwned: array of truck objects
+
 }
 
 ## Truck Schema
 
 {
+
 id: integer,
+
 name: string,
+
 imageOfTruck: string,
+
 cuisineType: string,
+
 currentLocation: string,
+
 departureTime: date and time (in ms since 1/1/70),
+
 operatorId: integer,
+
 menu: array of menuItem objects,
+
 customerRatings: array of customerRating values (integers),
+
 customerRatingsAvg: integer
+
 }
 
 ## Menu Item Schema
 
 {
+
 id: integer,
+
 menuId: integer,
+
 itemName: string,
+
 itemDescription: string,
+
 itemPrice: integer
+
 itemPhotos: array of URLs (strings),
+
 customerRatings: array of customerRating values (integers),
+
 customerRatingsAvg: integer
+
 }
 
 ## API
